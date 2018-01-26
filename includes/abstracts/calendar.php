@@ -817,7 +817,7 @@ abstract class Calendar {
 					$view_class,
 				), $this->id ) ) );
 
-				echo '<div class="' . $calendar_class . '" '
+				$html = '<div class="' . $calendar_class . '" '
 									. 'data-calendar-id="'    . $this->id . '" '
 									. 'data-timezone="'       . $this->timezone . '" '
 									. 'data-offset="'         . $this->offset . '" '
@@ -825,8 +825,12 @@ abstract class Calendar {
 									. 'data-calendar-start="' . $this->start .'" '
 									. 'data-calendar-end="'   . $this->end . '" '
 									. 'data-events-first="'   . $this->earliest_event .'" '
-									. 'data-events-last="'    . $this->latest_event . '"'
-									. '>';
+									. 'data-events-last="'    . $this->latest_event . '"';
+				if ( $this->feed = 'grouped-calendars' ) {
+					$html .= 'data-grouped-calendars=\'' . json_encode( simcal_get_grouped_calendars_names( $this ) ) . '\'';
+				}
+				$html .= '>';
+				echo $html;
 
 				do_action( 'simcal_calendar_html_before', $this->id );
 
@@ -840,8 +844,8 @@ abstract class Calendar {
 				if ( 'yes' == $poweredby ) {
 					$align = is_rtl() ? 'left' : 'right';
 					echo '<small class="simcal-powered simcal-align-' . $align .'">' .
-					     sprintf( __( 'Powered by <a href="%s" target="_blank">Simple Calendar</a>', 'google-calendar-events' ), simcal_get_url( 'home' ) ) .
-					     '</small>';
+							 sprintf( __( 'Powered by <a href="%s" target="_blank">Simple Calendar</a>', 'google-calendar-events' ), simcal_get_url( 'home' ) ) .
+							 '</small>';
 				}
 
 				echo '</div>';

@@ -207,6 +207,32 @@ function simcal_get_calendars( $exclude = '', $cached = true ) {
 }
 
 /**
+ * Get feed IDs and names from a grouped calendar.
+ *
+ * @param  string|Calendar $calendar
+ *
+ * @return array Associative array with ids as keys and feed titles as values.
+ */
+function simcal_get_grouped_calendars_names( $calendar ) {
+
+	$calendars_ids = simcal_get_feed( $calendar )->calendars_ids;
+
+	$posts = get_posts( array(
+		'post_type' => 'calendar',
+		'include' => $calendars_ids,
+		'nopaging' => true
+	) );
+
+	$feed_names = array();
+	foreach ( $posts as $post ) {
+		$feed_names[ $post->ID ] = $post->post_title;
+	}
+	asort( $feed_names );
+
+	return $feed_names;
+}
+
+/**
  * Get localized list of months or day names.
  *
  * Each day or month matches the array index (0-11 for months or 0-6 for days).
